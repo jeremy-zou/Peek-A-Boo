@@ -13,8 +13,18 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const AppNavigator = createStackNavigator(
   {
-    Home: HomeScreen,
-    Search: SearchScreen,
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: {
+        header: null,
+      }
+    },
+    Search: {
+      screen: SearchScreen,
+      navigationOptions: {
+        header: null,
+      }
+    }
   },
   {
     initialRouteName: 'Home',

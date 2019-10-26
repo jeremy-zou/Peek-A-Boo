@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import styles from './Styles'
 
 class SearchScreen extends React.Component {
+
     render() {
       return (
         <View style={styles.background}>

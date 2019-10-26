@@ -5,6 +5,7 @@ import styles from './Styles'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 class HomeScreen extends React.Component {
+    
     render() {
       return (
         
