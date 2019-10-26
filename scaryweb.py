@@ -2,17 +2,21 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import pyrebase
+import configparser
 
 def scrape():
-	config = {
-		"apiKey": "AIzaSyDgydSG7KjFNSooKwZxyA4ZwAx5Si4iR-g",
-		"authDomain": "adverscary.firebaseapp.com",
-		"databaseURL": "https://adverscary.firebaseio.com",
-		"projectId": "adverscary",
-		"storageBucket": "adverscary.appspot.com",
-		"serviceAccount": "key.json"
+
+	config = configparser.ConfigParser()
+	config.read('config.ini')
+	creds = {
+		"apiKey": config["FIREBASE"]["apiKey"],
+		"authDomain": config["FIREBASE"]["authDomain"],
+		"databaseURL": config["FIREBASE"]["databaseURL"],
+		"projectId": config["FIREBASE"]["projectId"],
+		"storageBucket": config["FIREBASE"]["storageBucket"],
+		"serviceAccount": config["FIREBASE"]["serviceAccount"]
 	}
-	firebase = pyrebase.initialize_app(config)
+	firebase = pyrebase.initialize_app(creds)
 	auth = firebase.auth()
 	user = auth.sign_in_with_email_and_password("ericyan1234@gmail.com", "scaryweb")
 	token = user['idToken']
@@ -21,7 +25,6 @@ def scrape():
 	resp = requests.get(base_url)
 	soup = BeautifulSoup(resp.text, 'html.parser')
 
-	f = open('movie_titles.txt', 'w')
 	for row in soup.find_all("tr")[1:]:
 
 		none_tag = False
@@ -41,7 +44,7 @@ def scrape():
 			"major_scares": major_scares,
 			"minor_scares": minor_scares
 		}
-
+		print("HEY")
 		if not none_tag:
 			# print(movie_title)
 			# f.write(movie_title + "\n")
@@ -59,23 +62,24 @@ def scrape():
 			outputDict["minor_scares"] = minor_scares
 			db.child("movies").push(outputDict, user['idToken'])
 		none_tag = False
-	# f.close()
 
+def make_movie_list():
+	import json
+	f = open('names.txt', 'r')
+	count = 1
+	val = []
+	movies = []
 
-import json
-f = open('names.txt', 'r')
-count = 1
-val = []
-movies = []
+	total = f.readlines()
+	for movie in total:
+		movie = movie.strip()
+		temp = {}
+		temp["id"] = count
+		count += 1
+		temp["name"] = movie
+		movies.append(movie)
+		val.append(temp)
+	print(val)
 
-total = f.readlines()
-for movie in total:
-	movie = movie.strip()
-	temp = {}
-	temp["id"] = count
-	count += 1
-	temp["name"] = movie
-	movies.append(movie)
-	val.append(temp)
-print(val)
-
+if __name__ == "__main__":
+	scrape()
