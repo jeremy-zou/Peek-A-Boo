@@ -24,12 +24,16 @@ const AppNavigator = createStackNavigator(
     Search: {
       screen: SearchScreen,
       navigationOptions: {
-        header: null,
+        headerStyle: {
+          backgroundColor: "black",
+          borderBottomWidth: 0
+        }
       }
     }
   },
   {
     initialRouteName: 'Home',
+    headerMode: 'screen'
   }
 );
 
@@ -45,6 +49,7 @@ export default class App extends React.Component {
     try {
       await Font.loadAsync({
         'bungee': require('./assets/fonts/bungee.otf'),
+        'openSans': require('./assets/fonts/openSans.ttf')
       });
       this.setState({fontLoaded: true});
     } catch (error) {

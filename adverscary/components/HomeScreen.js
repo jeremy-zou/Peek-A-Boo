@@ -17,12 +17,17 @@ class HomeScreen extends React.Component {
                 style={{width: 55, height: 55, marginTop: 0, marginRight: 8}}
                 source={ghostIcon}
               />
-              <Text style={styles.title}>peekaboo</Text>
+              <Text style={styles.title}>peek-a-boo</Text>
             </View>
-            <View style={{marginBottom: 300}}>
+            <Text style={styles.normalText}>Be Prepared, Not Scared</Text>
+            <View style={{marginTop:225, marginBottom: 250}}>
               <Button
+                buttonStyle={{
+                  backgroundColor: "#ff7325"
+                }}
                 title="Search"
-                type="outline"
+                //ftype="outline"
+                
                 onPress={() => this.props.navigation.navigate('Search')}
               />
             </View>
