@@ -1,6 +1,12 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
+    home: {
+      flex: 1,
+      backgroundColor: 'black',
+      alignItems: 'center',
+      //justifyContent: 'center',
+    },
     title: {
       color: 'white',
       fontWeight: 'bold',
@@ -9,8 +15,8 @@ const styles = StyleSheet.create({
     background: {
       flex: 1,
       backgroundColor: 'black',
-      alignItems: 'center',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
   })
 
