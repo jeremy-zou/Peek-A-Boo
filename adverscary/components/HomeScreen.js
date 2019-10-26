@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button } from 'react-native-elements';
-import { Animated, View, Text } from 'react-native';
+import { Image, Animated, View, Text } from 'react-native';
 import styles from './Styles'
+import ghostIcon from '../assets/icon.png'
 
 class HomeScreen extends React.Component {
     
@@ -10,9 +11,15 @@ class HomeScreen extends React.Component {
       
       <View style={styles.home}>
         <FadeInView>
-          <View style={{marginTop: 150}}>
-            <Text style={styles.title}>peek a boo</Text>
-            <View style={{marginTop: 50}}>
+          <View style={{marginTop: 300}}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Image
+                style={{width: 55, height: 55, marginTop: 0, marginRight: 8}}
+                source={ghostIcon}
+              />
+              <Text style={styles.title}>peekaboo</Text>
+            </View>
+            <View style={{marginBottom: 300}}>
               <Button
                 title="Search"
                 type="outline"

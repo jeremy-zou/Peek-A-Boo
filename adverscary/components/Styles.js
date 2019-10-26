@@ -5,12 +5,13 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'black',
       alignItems: 'center',
-      //justifyContent: 'center',
+      justifyContent: 'center',
     },
     title: {
       color: 'white',
       fontWeight: 'bold',
-      fontSize: 60,
+      fontSize: 50,
+      fontFamily: 'bungee',
     },
     background: {
       flex: 1,

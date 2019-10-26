@@ -7,8 +7,10 @@ import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './components/HomeScreen';
 import SearchScreen from './components/SearchScreen';
 import styles from './components/Styles'
+import * as Font from 'expo-font';
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { AppLoading } from 'expo';
 
 
 const AppNavigator = createStackNavigator(
@@ -34,7 +36,27 @@ const AppNavigator = createStackNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
+
+  state = {
+    fontLoaded: false
+  };
+
+  async componentWillMount() {
+    try {
+      await Font.loadAsync({
+        'bungee': require('./assets/fonts/bungee.otf'),
+      });
+      this.setState({fontLoaded: true});
+    } catch (error) {
+      console.log("error loading fonts", error);
+    }
+  }
+  
   render() {
+    if (!this.state.fontLoaded) {
+      return <AppLoading />;
+    }
+
     return <AppContainer />;
   }
 }
