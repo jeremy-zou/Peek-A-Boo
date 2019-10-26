@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, SearchBar, colors } from 'react-native-elements';
 import { View, Text } from 'react-native';
 import styles from './Styles'
+import Colors from '../assets/Colors';
 
 class SearchScreen extends React.Component {
     state = {
@@ -20,6 +21,7 @@ class SearchScreen extends React.Component {
             <View style={{marginTop: 15, alignItems:'center'}}>
                 <SearchBar
                     containerStyle={{backgroundColor: 'black', width: 400}}
+                    placeholderTextColor={Colors.appColor}
                     placeholder="Search movies"
                     onChangeText={this.updateSearch}
                     value={search}

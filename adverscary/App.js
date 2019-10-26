@@ -1,15 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import HomeScreen from './components/HomeScreen';
 import SearchScreen from './components/SearchScreen';
-import styles from './components/Styles'
 import * as Font from 'expo-font';
 
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AppLoading } from 'expo';
 
 
@@ -33,7 +29,7 @@ const AppNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
-    headerMode: 'screen'
+    headerMode: 'screen',
   }
 );
 

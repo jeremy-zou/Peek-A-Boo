@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import { BorderlessButton } from 'react-native-gesture-handler';
+import Colors from '../assets/Colors';
 
 const styles = StyleSheet.create({
     home: {
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     normalText: {
-      color: "#ff7325",
+      color: Colors.appColor,
       fontFamily: 'openSans',
       //fontWeight: 'bold',
       fontSize: 20,

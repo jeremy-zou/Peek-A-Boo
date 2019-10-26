@@ -1,8 +1,10 @@
 import React from 'react';
 import { Button } from 'react-native-elements';
 import { Image, Animated, View, Text } from 'react-native';
-import styles from './Styles'
-import ghostIcon from '../assets/icon.png'
+import styles from './Styles';
+import ghostIcon from '../assets/icon.png';
+import { Assets } from 'react-navigation-stack';
+import Colors from '../assets/Colors';
 
 class HomeScreen extends React.Component {
     
@@ -23,7 +25,7 @@ class HomeScreen extends React.Component {
             <View style={{marginTop:225, marginBottom: 250}}>
               <Button
                 buttonStyle={{
-                  backgroundColor: "#ff7325"
+                  backgroundColor: Colors.appColor
                 }}
                 title="Search"
                 //ftype="outline"
