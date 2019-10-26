@@ -1,0 +1,23 @@
+{
+  "name": "project-adverscary",
+  "version": "1.0.0",
+  "description": "nothing yet...",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^16.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremy-zou/project-adverscary.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeremy-zou/project-adverscary/issues"
+  },
+  "homepage": "https://github.com/jeremy-zou/project-adverscary#readme"
+}
