@@ -208,11 +208,8 @@ class TimerScreen extends React.Component {
     let descriptions = [];
 
     firebase.database().ref('movies/'.concat(this.state.movie["name"], '/scares')).once('value', function (snapshot) {
-      console.log("----");
       let val = snapshot.val();
-      console.log(timeStamps);
       for (var i = 0; i < val.length; i++) {
-        console.log(val[i]);
         for (key in val[i]) {
           timeStamps.push(key);
           descriptions.push(val[i][key]);
