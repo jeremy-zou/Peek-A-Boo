@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component, Fragment } from 'react';
-import { Image, Animated, Button, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Platform, SafeAreaView } from 'react-native';
+import { Image, Animated, Button, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Platform, Vibration } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
@@ -9,11 +9,12 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import movies from './api/movies';
 import _ from 'lodash';
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+import { AppLoading, Notifications } from 'expo';
 import ghostIcon from './assets/icon.png';
 import Colors from './assets/Colors';
 import styles from './components/Styles';
 import firebase from 'firebase';
+import * as Permissions from 'expo-permissions';
 
 class HomeScreen extends React.Component {
 
@@ -190,6 +191,20 @@ class CheckListScreen extends Component {
   }
 }
 
+function toSeconds(datetime) {
+  const times = datetime.split(":");
+  var seconds;
+  if (times.length == 1) {
+    seconds = Number(times[0]);
+  } else if (times.length == 2) {
+    seconds = Number(times[0]) * 60 + Number(times[1]);
+  } else if (times.length == 3) {
+    seconds = Number(times[0]) * 3600 + Number(times[1]) * 60 + Number(times[2]);
+  }
+
+  return seconds;
+}
+
 class TimerScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -201,11 +216,12 @@ class TimerScreen extends React.Component {
       timer: null,
       minutes_Counter: '00',
       seconds_Counter: '00',
+      hours_Counter: '00',
       startDisable: false
     }
 
-    let timeStamps = [];
-    let descriptions = [];
+    var timeStamps = new Array();
+    var descriptions = new Array();
 
     firebase.database().ref('movies/'.concat(this.state.movie["name"], '/scares')).once('value', function (snapshot) {
       let val = snapshot.val();
@@ -215,9 +231,12 @@ class TimerScreen extends React.Component {
           descriptions.push(val[i][key]);
         }
       }
-      console.log(timeStamps);
-      console.log(descriptions);
+      // console.log(timeStamps);
+      // console.log(descriptions);
     })
+
+    this.timeStamps = timeStamps;
+    this.descriptions = descriptions;
   }
  
   componentWillUnmount() {
@@ -227,20 +246,68 @@ class TimerScreen extends React.Component {
   onButtonStart = () => {
     let timer = setInterval(() => {
       var num = (Number(this.state.seconds_Counter) + 1).toString(),
-        count = this.state.minutes_Counter;
+        count = this.state.minutes_Counter,
+        hr = this.state.hours_Counter;
  
       if (Number(this.state.seconds_Counter) == 59) {
         count = (Number(this.state.minutes_Counter) + 1).toString();
         num = '00';
       }
+      if (Number(count) == 60) {
+        hr = (Number(this.state.hours_Counter) + 1).toString();
+        count = '00';
+      }
  
       this.setState({
         minutes_Counter: count.length == 1 ? '0' + count : count,
-        seconds_Counter: num.length == 1 ? '0' + num : num
+        seconds_Counter: num.length == 1 ? '0' + num : num,
+        hours_Counter: hr.length == 1 ? '0' + hr:hr
       });
     }, 1000);
     this.setState({ timer });
- 
+    Notifications.addListener(() => {
+      console.log('triggered!');
+      console.log(Date.now());
+    });
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('peekaboo', {
+        name: 'peekaboo',
+        sound: false,
+        priority: 'max',
+        vibrate: true
+      });
+      Notifications.createChannelAndroidAsync('peekaboo2', {
+        name: 'peekaboo2',
+        sound: true,
+        priority: 'max',
+        vibrate: true
+      });
+    }
+    var currentTime = Date.now();
+    for (var i = 0; i < this.timeStamps.length; i++) {
+      console.log(this.timeStamps[i]);
+      console.log(this.descriptions[i]);
+      console.log(new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000));
+      var id = 'peekaboo'
+      if (i % 2 == 0) {
+        id = 'peekaboo2'
+      }
+      Notifications.scheduleLocalNotificationAsync(
+        {
+          title: "Jump Scare Alert!",
+          body: this.descriptions[i],
+          android: {
+            channelId: id,
+          }
+          // ios: {
+          //   sound: true
+          // }
+        },
+        {
+          time: new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000)
+        }
+      );
+    }
     this.setState({startDisable : true})
   }
  
@@ -250,10 +317,15 @@ class TimerScreen extends React.Component {
   }
  
   onButtonClear = () => {
+    Notifications.dismissAllNotificationsAsync();
+    Notifications.cancelAllScheduledNotificationsAsync();
+    Notifications.deleteChannelAndroidAsync('peekaboo');
+    Notifications.deleteChannelAndroidAsync('peekaboo2');
     this.setState({
       timer: null,
       minutes_Counter: '00',
       seconds_Counter: '00',
+      hours_Counter: '00'
     });
   }
  
@@ -261,7 +333,7 @@ class TimerScreen extends React.Component {
     return (
       <View style={styles.MainContainer}>
  
-        <Text style={styles.counterText}>{this.state.minutes_Counter} : {this.state.seconds_Counter}</Text>
+        <Text style={styles.counterText}>{this.state.hours_Counter} : {this.state.minutes_Counter} : {this.state.seconds_Counter}</Text>
  
         <TouchableOpacity
           onPress={this.onButtonStart}
@@ -348,6 +420,7 @@ export default class App extends React.Component {
         'bungee': require('./assets/fonts/bungee.otf'),
         'openSans': require('./assets/fonts/openSans.ttf')
       });
+      Permissions.askAsync(Permissions.NOTIFICATIONS);
       this.setState({fontLoaded: true});
     } catch (error) {
       console.log("error loading fonts", error);
