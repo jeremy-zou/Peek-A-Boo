@@ -1,23 +1,19 @@
 {
-  "name": "hack-gt-2019",
+  "name": "project-adverscary",
   "version": "1.0.0",
-  "description": "nothing yet...",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jeremy-zou/hack-gt-2019.git"
+    "url": "git+https://github.com/jeremy-zou/project-adverscary.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jeremy-zou/hack-gt-2019/issues"
+    "url": "https://github.com/jeremy-zou/project-adverscary/issues"
   },
-  "homepage": "https://github.com/jeremy-zou/hack-gt-2019#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "firebase-admin": "^8.6.1"
-  }
+  "homepage": "https://github.com/jeremy-zou/project-adverscary#readme"
 }
