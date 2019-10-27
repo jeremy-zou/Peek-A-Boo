@@ -23,7 +23,7 @@ class HomeScreen extends React.Component {
       
       <View style={styles.home}>
         <FadeInView>
-          <View style={{marginTop: 300}}>
+          <View style={{marginTop: 300, marginBottom:-20}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Image
                 style={{width: 55, height: 55, marginTop: 0, marginRight: 8}}
@@ -32,16 +32,13 @@ class HomeScreen extends React.Component {
               <Text style={styles.title}>peek-a-boo</Text>
             </View>
             <Text style={styles.normalText}>Be Prepared, Not Scared</Text>
-            <View style={{marginTop:225, marginBottom: 250}}>
-              <Button
-                buttonStyle={{
-                  backgroundColor: 'white'
-                }}
-                title="Search"
-                color={Colors.secondaryColor}
-                //ftype="outline"
+            <View style={{marginTop:215, marginBottom: 270, alignItems: 'center'}}>
+              <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Search')}
-              />
+                activeOpacity={0.6}
+                style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
+                <Text style={styles.buttonText}>Search</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </FadeInView>
@@ -140,13 +137,15 @@ class SearchScreen extends Component {
             //To remove the underline from the android input
           />
         </View>
-        <View style={{marginTop:453}}>
-          <Button
-            title="Next"
-            color={Colors.appColor}
+        <View style={{marginTop:422, alignItems: 'center'}}>
+          <TouchableOpacity
             disabled={(this.state.selectedItem == "")}
             onPress={() => this.props.navigation.navigate('CheckList', this.state)}
-          />
+            activeOpacity={0.6}
+            style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+          
         </View>
       </View>
     );
@@ -167,25 +166,32 @@ class CheckListScreen extends Component {
   render() {
     return (
       <View style={styles.background}>
-        <Text style={styles.normalText}>What you would like to be warned about?</Text>
+        <View style={{alignItems: 'center', marginTop: 25}}>
+          <Text style={styles.normalText}>What you would like to be warned about?</Text>
+        </View>
+        <View style={{ padding:8, marginTop:25}}>
+          <CheckBox
+            title='Jump scares'
+            checkedColor={Colors.appColor}
+            checked={this.state.jumpscares}
+            onPress={() => this.setState({jumpscares: !this.state.jumpscares})}
+          />
 
-        <CheckBox
-          title='Jump scares'
-          checkedColor={Colors.appColor}
-          checked={this.state.jumpscares}
-          onPress={() => this.setState({jumpscares: !this.state.jumpscares})}
-        />
-
-        <CheckBox
-          title='Gore'
-          checked={this.state.gore}
-          onPress={() => this.setState({gore: !this.state.gore})}
-        />
-        <Button
-          title="Begin Movie"
-          color={Colors.appColor}
-          onPress={() => this.props.navigation.navigate('Timer', this.state)}
-        />
+          <CheckBox
+            title='Gore'
+            checkedColor={Colors.appColor}
+            checked={this.state.gore}
+            onPress={() => this.setState({gore: !this.state.gore})}
+          />
+        </View>
+        <View style={{alignItems: 'center', marginTop: 300}}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Timer', this.state)}
+            activeOpacity={0.6}
+            style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
+            <Text style={styles.buttonText}>Begin Movie</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -276,28 +282,18 @@ class TimerScreen extends React.Component {
         priority: 'max',
         vibrate: true
       });
-      Notifications.createChannelAndroidAsync('peekaboo2', {
-        name: 'peekaboo2',
-        sound: true,
-        priority: 'max',
-        vibrate: true
-      });
     }
     var currentTime = Date.now();
     for (var i = 0; i < this.timeStamps.length; i++) {
       console.log(this.timeStamps[i]);
       console.log(this.descriptions[i]);
       console.log(new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000));
-      var id = 'peekaboo'
-      if (i % 2 == 0) {
-        id = 'peekaboo2'
-      }
       Notifications.scheduleLocalNotificationAsync(
         {
           title: "Jump Scare Alert!",
           body: this.descriptions[i],
           android: {
-            channelId: id,
+            channelId: 'peekaboo',
           },
           ios: {
             sound: true,
@@ -321,7 +317,6 @@ class TimerScreen extends React.Component {
     Notifications.dismissAllNotificationsAsync();
     Notifications.cancelAllScheduledNotificationsAsync();
     Notifications.deleteChannelAndroidAsync('peekaboo');
-    Notifications.deleteChannelAndroidAsync('peekaboo2');
     this.setState({
       timer: null,
       minutes_Counter: '00',

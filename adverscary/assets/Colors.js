@@ -1,6 +1,6 @@
 const Colors = {
     appColor: "#ff7325",
-    secondaryColor: "#b7adcf"
+    secondaryColor: "white"
 }
 
 export default Colors;
