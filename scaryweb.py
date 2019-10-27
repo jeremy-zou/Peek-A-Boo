@@ -24,14 +24,14 @@ def scrape():
 	base_url = "https://wheresthejump.com/full-movie-list/"
 	resp = requests.get(base_url)
 	soup = BeautifulSoup(resp.text, 'html.parser')
-
+	f = open('names.txt', 'w')
 	for row in soup.find_all("tr")[1:]:
 
 		none_tag = False
 		movie_link = row.find("a")['href']
 		movie_page = requests.get(movie_link)
 		movie_soup = BeautifulSoup(movie_page.text, 'html.parser')
-		movie_title = re.findall(r'Jump Scares In (.*) \(', movie_soup.find("h1", attrs= {"class": "header-post-title-class"}).text)
+		movie_title = re.findall(r'Jump Scares In (.*)', movie_soup.find("h1", attrs= {"class": "header-post-title-class"}).text)
 		minor_scares = []
 		major_scares = []
 		if not movie_title:
@@ -40,14 +40,12 @@ def scrape():
 		else:
 			movie_title = movie_title[0]
 		outputDict = {
-			"name": movie_title,
 			"major_scares": major_scares,
 			"minor_scares": minor_scares
 		}
-		print("HEY")
 		if not none_tag:
-			# print(movie_title)
-			# f.write(movie_title + "\n")
+			print(movie_title)
+			f.write(movie_title + "\n")
 			for jump_scare in movie_soup.find_all("p"):
 				time = re.search(r'\d*:?\d+:\d+', jump_scare.text)
 				major = bool(jump_scare.find("strong"))
@@ -60,7 +58,7 @@ def scrape():
 					minor_scares.append({time.group(): description_text})
 			outputDict["major_scares"] = major_scares
 			outputDict["minor_scares"] = minor_scares
-			db.child("movies").push(outputDict, user['idToken'])
+			db.child("movies").child(movie_title).set(outputDict, user['idToken'])
 		none_tag = False
 
 def make_movie_list():
@@ -79,7 +77,7 @@ def make_movie_list():
 		temp["name"] = movie
 		movies.append(movie)
 		val.append(temp)
-	print(val)
 
 if __name__ == "__main__":
-	scrape()
+	# scrape()
+	make_movie_list
