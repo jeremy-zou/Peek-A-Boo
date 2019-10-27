@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     counterText:{
-      fontSize: 28,
+      fontSize: 65,
       color: 'white'
     }
   })

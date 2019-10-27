@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Component, Fragment } from 'react';
-import { Image, Animated, Button, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Platform, Vibration } from 'react-native';
+import { Image, Animated, View, Text, TouchableOpacity, Platform} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
-import { List, SearchBar, CheckBox, ListItem } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import movies from './api/movies';
 import _ from 'lodash';
@@ -37,7 +36,7 @@ class HomeScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate('Search')}
                 activeOpacity={0.6}
                 style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
-                <Text style={styles.buttonText}>Search</Text>
+                <Text style={styles.buttonText}>Get Started</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -124,7 +123,7 @@ class SearchScreen extends Component {
             itemsContainerStyle={{
               //items container style you can pass maxHeight
               //to restrict the items dropdown hieght
-              maxHeight: '100%',
+              maxHeight: '73%',
             }}
             items={items}
             //mapping of item array
@@ -142,8 +141,8 @@ class SearchScreen extends Component {
             disabled={(this.state.selectedItem == "")}
             onPress={() => this.props.navigation.navigate('CheckList', this.state)}
             activeOpacity={0.6}
-            style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
-            <Text style={styles.buttonText}>Next</Text>
+            style={[styles.button, { backgroundColor: this.state.selectedItem=="" ? '#B0BEC5' : '#FF6F00' }]} >
+            <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>
           
         </View>
@@ -166,7 +165,7 @@ class CheckListScreen extends Component {
   render() {
     return (
       <View style={styles.background}>
-        <View style={{alignItems: 'center', marginTop: 25}}>
+        <View style={{alignItems: 'center', marginTop: 60}}>
           <Text style={styles.normalText}>What you would like to be warned about?</Text>
         </View>
         <View style={{ padding:8, marginTop:25}}>
@@ -184,7 +183,7 @@ class CheckListScreen extends Component {
             onPress={() => this.setState({gore: !this.state.gore})}
           />
         </View>
-        <View style={{alignItems: 'center', marginTop: 300}}>
+        <View style={{alignItems: 'center', marginTop: 265}}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Timer', this.state)}
             activeOpacity={0.6}
@@ -237,8 +236,6 @@ class TimerScreen extends React.Component {
           descriptions.push(val[i][key]);
         }
       }
-      // console.log(timeStamps);
-      // console.log(descriptions);
     })
 
     this.timeStamps = timeStamps;
@@ -314,9 +311,12 @@ class TimerScreen extends React.Component {
   }
  
   onButtonClear = () => {
-    Notifications.dismissAllNotificationsAsync();
+    if (Platform.OS === 'android') {
+      Notifications.dismissAllNotificationsAsync();
+      Notifications.deleteChannelAndroidAsync('peekaboo');
+    }
+    
     Notifications.cancelAllScheduledNotificationsAsync();
-    Notifications.deleteChannelAndroidAsync('peekaboo');
     this.setState({
       timer: null,
       minutes_Counter: '00',
@@ -328,32 +328,33 @@ class TimerScreen extends React.Component {
   render() {
     return (
       <View style={styles.MainContainer}>
- 
+
         <Text style={styles.counterText}>{this.state.hours_Counter} : {this.state.minutes_Counter} : {this.state.seconds_Counter}</Text>
- 
+
         <TouchableOpacity
           onPress={this.onButtonStart}
           activeOpacity={0.6}
           style={[styles.button, { backgroundColor: this.state.startDisable ? '#B0BEC5' : '#FF6F00' }]} 
           disabled={this.state.startDisable} >
-          <Text style={styles.buttonText}>START</Text>
+          <Text style={styles.buttonText}>PLAY</Text>
         </TouchableOpacity>
- 
+
         <TouchableOpacity
           onPress={this.onButtonStop}
           activeOpacity={0.6}
           style={[styles.button, { backgroundColor:  '#FF6F00'}]} >
-          <Text style={styles.buttonText}>STOP</Text>
+          <Text style={styles.buttonText}>PAUSE</Text>
         </TouchableOpacity>
- 
+
         <TouchableOpacity
           onPress={this.onButtonClear}
           activeOpacity={0.6}
           style={[styles.button, { backgroundColor: this.state.startDisable ? '#B0BEC5' : '#FF6F00' }]} 
           disabled={this.state.startDisable} >
-          <Text style={styles.buttonText}> CLEAR </Text>
+          <Text style={styles.buttonText}>RESET</Text>
         </TouchableOpacity>
       </View>
+
     );
   }
 } 
@@ -369,6 +370,12 @@ const RootStack = createStackNavigator(
     Search: {
       screen: SearchScreen,
       navigationOptions: {
+        headerBackTitle: 'Back',
+        title:'PEEK-A-BOO',
+        //headerTitle: 'PEEK-A-BOO',
+        headerTitleStyle: {
+          fontFamily: 'bungee'
+        },
         headerStyle: {
           backgroundColor: "black",
           borderBottomWidth: 0
@@ -379,6 +386,12 @@ const RootStack = createStackNavigator(
     CheckList: {
       screen: CheckListScreen,
       navigationOptions: {
+        headerBackTitle: 'Back',
+        title:'PEEK-A-BOO',
+        //headerTitle: 'PEEK-A-BOO',
+        headerTitleStyle: {
+          fontFamily: 'bungee'
+        },
         headerStyle: {
           backgroundColor: "black",
           borderBottomWidth: 0
@@ -389,6 +402,12 @@ const RootStack = createStackNavigator(
     Timer: {
       screen: TimerScreen,
       navigationOptions: {
+        headerBackTitle: 'Back',
+        title:'PEEK-A-BOO',
+        //headerTitle: 'PEEK-A-BOO',
+        headerTitleStyle: {
+          fontFamily: 'bungee'
+        },
         headerStyle: {
           backgroundColor: "black",
           borderBottomWidth: 0
