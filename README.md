@@ -3,7 +3,7 @@
 ## Authors
 **Names:  Eric Yan, Jeremy Zhou, Andrew Wang, Edward Chiao**
 
-### Overview
+## Overview
 Project Peek-A-Boo is a mobile application that alerts users in anticipation of jump scares from a database of over 500 scary movies.
 
 The purpose of Project Peek-A-Boo is to make scary and intense movies more accessible to all types of audiences. Many movie-watchers
