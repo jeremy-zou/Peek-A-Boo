@@ -17,8 +17,7 @@ const styles = StyleSheet.create({
     background: {
       flex: 1,
       backgroundColor: 'black',
-      justifyContent: 'space-between',
-      alignItems: 'center'
+      //alignItems: 'center'
     },
     normalText: {
       color: Colors.appColor,
@@ -26,6 +25,28 @@ const styles = StyleSheet.create({
       //fontWeight: 'bold',
       fontSize: 20,
       textAlign: 'center'
+    },
+    MainContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'black',
+    },
+    button: {
+      width: '80%',
+      paddingTop:8,
+      paddingBottom:8,
+      borderRadius:7,
+      marginTop: 10
+    },
+    buttonText:{
+        color:'#fff',
+        textAlign:'center',
+        fontSize: 20
+    },
+    counterText:{
+      fontSize: 28,
+      color: 'white'
     }
   })
 
