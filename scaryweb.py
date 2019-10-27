@@ -44,7 +44,7 @@ def scrape():
 			"minor_scares": minor_scares
 		}
 		if not none_tag:
-			# print(movie_title)
+			print(movie_title)
 			f.write(movie_title + "\n")
 			for jump_scare in movie_soup.find_all("p"):
 				time = re.search(r'\d*:?\d+:\d+', jump_scare.text)
@@ -79,4 +79,5 @@ def make_movie_list():
 		val.append(temp)
 
 if __name__ == "__main__":
-	scrape()
+	# scrape()
+	make_movie_list
