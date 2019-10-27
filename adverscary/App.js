@@ -159,6 +159,7 @@ class CheckListScreen extends Component {
       movie: props.navigation.state.params.selectedItem,
       jumpscares: false,
       gore: false,
+      noSpoil: false,
     }
   }
   
@@ -182,8 +183,15 @@ class CheckListScreen extends Component {
             checked={this.state.gore}
             onPress={() => this.setState({gore: !this.state.gore})}
           />
+          <CheckBox
+            title='Spoiler-Free Notifications'
+            checkedColor={Colors.appColor}
+            checked={this.state.noSpoil}
+            onPress={() => this.setState({noSpoil: !this.state.noSpoil})}
+          />
+
         </View>
-        <View style={{alignItems: 'center', marginTop: 265}}>
+        <View style={{alignItems: 'center', marginTop: 210}}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Timer', this.state)}
             activeOpacity={0.6}
@@ -217,6 +225,7 @@ class TimerScreen extends React.Component {
     this.state = {
       movie: props.navigation.state.params.movie,
       gore: props.navigation.state.params.gore,
+      noSpoil: props.navigation.state.params.noSpoil,
       jumpscares: props.navigation.state.params.jumpscares,
       timer: null,
       minutes_Counter: '00',
@@ -279,10 +288,14 @@ class TimerScreen extends React.Component {
       console.log(this.timeStamps[i]);
       console.log(this.descriptions[i]);
       console.log(new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000));
+      var notifText = "Take Cover! (No Spoilers)"
+      if (this.state.noSpoil == false) {
+        notifText = this.descriptions[i]
+      }
       Notifications.scheduleLocalNotificationAsync(
         {
           title: "Jump Scare Alert!",
-          body: this.descriptions[i],
+          body: notifText,
           android: {
             channelId: 'peekaboo',
           },
