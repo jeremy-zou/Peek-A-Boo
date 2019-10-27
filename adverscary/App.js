@@ -298,10 +298,11 @@ class TimerScreen extends React.Component {
           body: this.descriptions[i],
           android: {
             channelId: id,
+          },
+          ios: {
+            sound: true,
+            _displayInForeground: true
           }
-          // ios: {
-          //   sound: true
-          // }
         },
         {
           time: new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000)
