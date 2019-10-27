@@ -222,7 +222,9 @@ class TimerScreen extends React.Component {
       minutes_Counter: '00',
       seconds_Counter: '00',
       hours_Counter: '00',
-      startDisable: false
+      startDisable: false,
+      timerStartTime: null,
+      buffer: 0,
     }
 
     var timeStamps = new Array();
@@ -247,23 +249,15 @@ class TimerScreen extends React.Component {
   }
  
   onButtonStart = () => {
+    this.state.timerStartTime = Date.now();
     let timer = setInterval(() => {
-      var num = (Number(this.state.seconds_Counter) + 1).toString(),
-        count = this.state.minutes_Counter,
-        hr = this.state.hours_Counter;
- 
-      if (Number(this.state.seconds_Counter) == 59) {
-        count = (Number(this.state.minutes_Counter) + 1).toString();
-        num = '00';
-      }
-      if (Number(count) == 60) {
-        hr = (Number(this.state.hours_Counter) + 1).toString();
-        count = '00';
-      }
- 
+      var sec = (Math.floor(((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) % 60).toString(),
+        min = Math.floor(((Math.floor((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) % 3600)/60).toString(),
+        hr = Math.floor((Math.floor((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) /3600).toString();
+
       this.setState({
-        minutes_Counter: count.length == 1 ? '0' + count : count,
-        seconds_Counter: num.length == 1 ? '0' + num : num,
+        minutes_Counter: min.length == 1 ? '0' + min : min,
+        seconds_Counter: sec.length == 1 ? '0' + sec : sec,
         hours_Counter: hr.length == 1 ? '0' + hr:hr
       });
     }, 1000);
@@ -307,7 +301,10 @@ class TimerScreen extends React.Component {
  
   onButtonStop = () => {
     clearInterval(this.state.timer);
-    this.setState({startDisable : false})
+    this.setState({
+      startDisable : false,
+      buffer : (Math.floor(Date.now() - this.state.timerStartTime) / 1000) + this.state.buffer,
+    })
   }
  
   onButtonClear = () => {
@@ -321,7 +318,9 @@ class TimerScreen extends React.Component {
       timer: null,
       minutes_Counter: '00',
       seconds_Counter: '00',
-      hours_Counter: '00'
+      hours_Counter: '00',
+      timerStartTime: null,
+      buffer: 0,
     });
   }
  
