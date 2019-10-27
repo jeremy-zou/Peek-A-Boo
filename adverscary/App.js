@@ -1,68 +1,3 @@
-// import React from 'react';
-// import { createAppContainer } from 'react-navigation';
-// import { createStackNavigator } from 'react-navigation-stack';
-
-// import HomeScreen from './components/HomeScreen';
-// import SearchScreen from './components/SearchScreen';
-// import * as Font from 'expo-font';
-
-// import { AppLoading } from 'expo';
-
-
-// const AppNavigator = createStackNavigator(
-//   {
-//     Home: {
-//       screen: HomeScreen,
-//       navigationOptions: {
-//         header: null,
-//       }
-//     },
-//     Search: {
-//       screen: SearchScreen,
-//       navigationOptions: {
-//         headerStyle: {
-//           backgroundColor: "black",
-//           borderBottomWidth: 0
-//         }
-//       }
-//     }
-//   },
-//   {
-//     initialRouteName: 'Home',
-//     headerMode: 'screen',
-//   }
-// );
-
-// const AppContainer = createAppContainer(AppNavigator);
-
-// export default class App extends React.Component {
-
-//   state = {
-//     fontLoaded: false
-//   };
-
-//   async componentWillMount() {
-//     try {
-//       await Font.loadAsync({
-//         'bungee': require('./assets/fonts/bungee.otf'),
-//         'openSans': require('./assets/fonts/openSans.ttf')
-//       });
-//       this.setState({fontLoaded: true});
-//     } catch (error) {
-//       console.log("error loading fonts", error);
-//     }
-//   }
-  
-//   render() {
-//     if (!this.state.fontLoaded) {
-//       return <AppLoading />;
-//     }
-
-//     return <AppContainer />;
-//   }
-// }
-
-
 import * as React from 'react';
 import { Component, Fragment } from 'react';
 import { Image, Animated, Button, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Platform, SafeAreaView } from 'react-native';
@@ -78,9 +13,10 @@ import { AppLoading } from 'expo';
 import ghostIcon from './assets/icon.png';
 import Colors from './assets/Colors';
 import styles from './components/Styles';
+import firebase from 'firebase';
 
 class HomeScreen extends React.Component {
-    
+
   render() {
     return (
       
@@ -138,7 +74,13 @@ const FadeInView = (props) => {
   );
 }
 
-var items = movies;
+var items = movies; // todo: get array of all movie names here
+const config = {
+  databaseURL: 'https://adverscary.firebaseio.com/',
+  projectId: 'adverscary'
+};
+firebase.initializeApp(config);
+
 class SearchScreen extends Component {
   constructor() {
     super();
@@ -261,6 +203,23 @@ class TimerScreen extends React.Component {
       seconds_Counter: '00',
       startDisable: false
     }
+
+    let timeStamps = [];
+    let descriptions = [];
+
+    console.log(this.state.movie["name"]);
+    firebase.database().ref('movies/'.concat(this.state.movie["name"], '/scares')).once('value', function (snapshot) {
+      console.log("----");
+      let val = snapshot.val();
+      console.log(timeStamps);
+      for (var i = 0; i < val.length; i++) {
+        console.log(val[i].keys());
+        timeStamps.push();
+        // timeStamps.push(val[i].keys().next().value);
+      }
+      // console.log(timeStamps);
+      console.log(timeStamps);
+    })
   }
  
   componentWillUnmount() {
