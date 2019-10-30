@@ -20,6 +20,7 @@ export default class TimerScreen extends React.Component {
         hours_Counter: '00',
         startDisable: false,
         timerStartTime: null,
+        // buffer will be in milliseconds
         buffer: 0,
       }
   
@@ -47,9 +48,9 @@ export default class TimerScreen extends React.Component {
     onButtonStart = () => {
       this.state.timerStartTime = Date.now();
       let timer = setInterval(() => {
-        var sec = (Math.floor(((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) % 60).toString(),
-          min = Math.floor(((Math.floor((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) % 3600)/60).toString(),
-          hr = Math.floor((Math.floor((Date.now() - this.state.timerStartTime)/1000) + this.state.buffer) /3600).toString();
+        var sec = (Math.floor(((Date.now() - this.state.timerStartTime + this.state.buffer)/1000)) % 60).toString(),
+          min = Math.floor(((Math.floor((Date.now() - this.state.timerStartTime + this.state.buffer)/1000)) % 3600)/60).toString(),
+          hr = Math.floor((Math.floor((Date.now() - this.state.timerStartTime + this.state.buffer)/1000)) /3600).toString();
   
         this.setState({
           minutes_Counter: min.length == 1 ? '0' + min : min,
@@ -72,9 +73,16 @@ export default class TimerScreen extends React.Component {
       }
       var currentTime = Date.now();
       for (var i = 0; i < this.timeStamps.length; i++) {
+        var timeStamp = currentTime
+            + (1000 * toSeconds(this.timeStamps[i])) - 15000 - this.state.buffer;
+        if (timeStamp < currentTime) {
+          // this alert has already happened
+          continue;
+        }
         console.log(this.timeStamps[i]);
         console.log(this.descriptions[i]);
-        console.log(new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000));
+        console.log(new Date(currentTime
+            + (1000 * toSeconds(this.timeStamps[i])) - 15000 - this.state.buffer));
         var notifText = "Take Cover! (No Spoilers)"
         if (this.state.noSpoil == false) {
           notifText = this.descriptions[i]
@@ -92,7 +100,7 @@ export default class TimerScreen extends React.Component {
             }
           },
           {
-            time: new Date(currentTime + (1000 * toSeconds(this.timeStamps[i])) - 15000)
+            time: new Date(timeStamp)
           }
         );
       }
@@ -100,10 +108,18 @@ export default class TimerScreen extends React.Component {
     }
    
     onButtonStop = () => {
+      // clearInterval stops the timer
       clearInterval(this.state.timer);
+
+      if (Platform.OS == 'android') {
+        Notifications.dismissAllNotificationsAsync();
+        Notifications.deleteChannelAndroidAsync('peekaboo');
+      }
+
+      Notifications.cancelAllScheduledNotificationsAsync();
       this.setState({
         startDisable : false,
-        buffer : (Math.floor(Date.now() - this.state.timerStartTime) / 1000) + this.state.buffer,
+        buffer: Date.now() - this.state.timerStartTime + this.state.buffer,
       })
     }
    
