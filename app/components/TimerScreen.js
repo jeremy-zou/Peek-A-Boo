@@ -73,10 +73,16 @@ export default class TimerScreen extends React.Component {
       }
       var currentTime = Date.now();
       for (var i = 0; i < this.timeStamps.length; i++) {
+        var timeStamp = currentTime
+            + (1000 * toSeconds(this.timeStamps[i])) - 15000 - this.state.buffer;
+        if (timeStamp < currentTime) {
+          // this alert has already happened
+          continue;
+        }
         console.log(this.timeStamps[i]);
         console.log(this.descriptions[i]);
         console.log(new Date(currentTime
-            + (1000 * toSeconds(this.timeStamps[i])) - 15000 - (buffer / 1000)));
+            + (1000 * toSeconds(this.timeStamps[i])) - 15000 - this.state.buffer));
         var notifText = "Take Cover! (No Spoilers)"
         if (this.state.noSpoil == false) {
           notifText = this.descriptions[i]
@@ -94,8 +100,7 @@ export default class TimerScreen extends React.Component {
             }
           },
           {
-            time: new Date(currentTime
-                + (1000 * toSeconds(this.timeStamps[i])) - 15000 - (buffer / 1000))
+            time: new Date(timeStamp)
           }
         );
       }
