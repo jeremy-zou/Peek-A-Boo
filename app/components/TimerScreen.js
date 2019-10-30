@@ -95,7 +95,7 @@ export default class TimerScreen extends React.Component {
           },
           {
             time: new Date(currentTime
-                + (1000 * toSeconds(this.timeStamps[i])) - 15000 - (buffer / 1000),
+                + (1000 * toSeconds(this.timeStamps[i])) - 15000 - (buffer / 1000))
           }
         );
       }
