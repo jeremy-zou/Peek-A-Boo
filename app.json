@@ -1,0 +1,12 @@
+{
+  "name": "Peek-A-Boo",
+  "displayName": "Peek-A-Boo",
+  "expo": {
+    "name": "Peek-A-Boo",
+    "slug": "Peek-A-Boo",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
